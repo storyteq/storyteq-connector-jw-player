@@ -1,4 +1,4 @@
-function StoryteqConnectorJwPlayer(parameters) {
+    function StoryteqConnectorJwPlayer(parameters) {
     this.videoPlayerId = parameters.videoPlayerId;
     this.videoHash = this.getUrlParameter(parameters.videoParameterName);
     this.dataCallbackFunction = parameters.dataCallbackFunction;
@@ -14,7 +14,7 @@ function StoryteqConnectorJwPlayer(parameters) {
 
 }
 
-StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function() {
+StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
     var connector = this;
     var jwPlayerInstance = jwplayer(this.videoPlayerId);
     jwPlayerInstance.setup({
@@ -36,11 +36,25 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function() {
         }
     });
 
+    // Create StoryTEQ button in player
+    this.createPlayerButton(response, jwPlayerInstance);
+
     //Get environment details
     this.setEnvironment(jwPlayerInstance.getEnvironment());
 
     // Fire off video event emitter
     this.videoEventEmitter(jwPlayerInstance);
+}
+
+StoryteqConnectorJwPlayer.prototype.createPlayerButton = function(response, jwPlayerInstance) {
+    if (response.data.player_logo == true){
+        jwPlayerInstance.addButton(
+          'https://storage.googleapis.com/storyteq-shared-assets/video-player/logo.png',
+          'Powered by StoryTEQ',
+          function() {window.open('https://storyteq.com/?utm_source=stplayer', '_blank');}, 
+          'about'
+        );
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.round = function(value, precision) {
@@ -104,7 +118,7 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
         this.setParameterData(response.data.parameters);
 
         // Instantiate JW player
-        this.setJwPlayerInstance();
+        this.setJwPlayerInstance(response);
 
         // Create device event
         this.createAnalyticDevice();
