@@ -1,18 +1,39 @@
-    function StoryteqConnectorJwPlayer(parameters) {
-    this.videoPlayerId = parameters.videoPlayerId;
-    this.videoHash = this.getUrlParameter(parameters.videoParameterName);
-    this.dataCallbackFunction = parameters.dataCallbackFunction;
-    this.createAnalyticEmbed();
+function StoryteqConnectorJwPlayer(parameters) {
+    var $vm = this;
+    $vm.videoPlayerId = parameters.videoPlayerId;
+    $vm.videoHash = $vm.getUrlParameter(parameters.videoParameterName);
+    if (parameters.dataCallbackFunction) {
+        $vm.dataCallbackFunction = parameters.dataCallbackFunction;
+    }
+
+    $vm.jwplayerId = 'oNX7JPx1';
+    if (parameters.jwplayerId) {
+        $vm.jwplayerId = parameters.jwplayerId;
+    }
 
     // Video event variables
-    this.delta = 20;
-    this.durationOfVideo = null;
-    this.timecodes = [];
-    this.videoStarted = false;
+    $vm.delta = 20;
+    $vm.durationOfVideo = null;
+    $vm.timecodes = [];
+    $vm.videoStarted = false;
 
-    // Get video data from StoryTEQ API
-    this.getVideoData();
-
+    (function() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        if (script.readyState) { // IE
+            if (script.readyState === 'loaded') {
+                // Get video data from StoryTEQ API
+                $vm.getVideoData();
+            }
+        } else { // Others
+            script.onload = function() {
+                // Get video data from StoryTEQ API
+                $vm.getVideoData();
+            }
+        }
+        script.src = 'https://content.jwplatform.com/libraries/' + $vm.jwplayerId + '.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }());
 }
 
 StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
@@ -48,12 +69,14 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
 }
 
 StoryteqConnectorJwPlayer.prototype.createPlayerButton = function(response, jwPlayerInstance) {
-    if (response.data.player_logo == true){
+    if (response.data.player_logo == true) {
         jwPlayerInstance.addButton(
-          'https://storage.googleapis.com/storyteq-shared-assets/video-player/logo.png',
-          'Powered by StoryTEQ',
-          function() {window.open('https://storyteq.com/?utm_source=stplayer', '_blank');}, 
-          'about'
+            'https://storage.googleapis.com/storyteq-shared-assets/video-player/logo.png',
+            'Powered by StoryTEQ',
+            function() {
+                window.open('https://storyteq.com/?utm_source=stplayer', '_blank');
+            },
+            'about'
         );
     }
 }
@@ -64,7 +87,6 @@ StoryteqConnectorJwPlayer.prototype.round = function(value, precision) {
 }
 
 StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstance) {
-
     var connector = this;
     jwPlayerInstance.onTime(function(event) {
         //Dynamically fetch duration of video
@@ -131,8 +153,10 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
         // Create device event
         this.createAnalyticDevice();
 
-        // Run data callback function
-        eval('window.' + this.dataCallbackFunction + '()');
+        if (this.dataCallbackFunction) {
+            // Run data callback function
+            eval('window.' + this.dataCallbackFunction + '()');
+        }
     }
 
     xhr.send();
@@ -224,4 +248,12 @@ StoryteqConnectorJwPlayer.prototype.setParameterData = function(parameterData) {
 
 StoryteqConnectorJwPlayer.prototype.setEnvironment = function(environmentData) {
     this.environment = environmentData;
+}
+
+if (typeof module === "object" && module && typeof module.exports === "object") {
+    // commonjs / browserify
+    module.exports = StoryteqConnectorJwPlayer;
+} else {
+    // AMD
+    define(StoryteqConnectorJwPlayer);
 }
