@@ -2,6 +2,7 @@
     this.videoPlayerId = parameters.videoPlayerId;
     this.videoHash = this.getUrlParameter(parameters.videoParameterName);
     this.dataCallbackFunction = parameters.dataCallbackFunction;
+    this.createAnalyticEmbed();
 
     // Video event variables
     this.delta = 20;
@@ -94,10 +95,15 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
-    var url = 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/analyticEvent.php?hash=' + this.videoHash;
+    var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
+
+    console.log(JSON.stringify({
+        'type': type,
+        'meta': meta
+    }));
 
     xhr.send(JSON.stringify({
         'type': type,
@@ -107,10 +113,12 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/getVideoData.php');
+    xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
 
     xhr.onload = (data) => {
         var response = JSON.parse(xhr.response);
+
+        console.log(response);
 
         // Process response
         this.setVideoUrl(response.data.video_url);
@@ -172,7 +180,7 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
 
-    var meta = {
+    var meta = {    
         'percentage': percentage
     };
 
@@ -180,6 +188,11 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
 
     // Create analytic event
     this.analyticPostRequest('view', meta);
+}
+
+StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
+    // Create analytic event
+    this.analyticPostRequest('embed', null);
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
