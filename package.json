@@ -1,0 +1,26 @@
+{
+  "name": "storyteq-connector-jw-player",
+  "version": "1.0.0",
+  "description": "A JWPlayer connector for the StoryTEQ API to simplify video loading, parameter values and video analytics.",
+  "main": "storyteq-connector-jw-player.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/storyteq/storyteq-connector-jw-player.git"
+  },
+  "keywords": [
+    "storyteq",
+    "storyteq-api",
+    "storyteq-connector",
+    "jwplayer",
+    "storyteq-jwplayer"
+  ],
+  "author": "teq@storyteq.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/storyteq/storyteq-connector-jw-player/issues"
+  },
+  "homepage": "https://github.com/storyteq/storyteq-connector-jw-player#readme"
+}
