@@ -150,6 +150,7 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     if (!this.videoHash || this.videoHash === undefined || this.videoHash === null) {
         document.getElementById(this.videoPlayerId).innerHTML = 'No video hash has been given';
+        document.getElementById(this.videoPlayerId).style = 'text-align: center;background:#000;color:#fff;font-weight:900;height:200px;line-height:200px;'
         return;
     }
     var xhr = new XMLHttpRequest();
