@@ -148,6 +148,10 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 }
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
+    if (!this.videoHash || this.videoHash === undefined || this.videoHash === null) {
+        document.getElementById(this.videoPlayerId).innerHTML = 'No video hash has been given';
+        return;
+    }
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
 
