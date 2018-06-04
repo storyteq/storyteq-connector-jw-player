@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>JW Player demo</title>
-	<!--<script type="text/javascript" src="https://content.jwplatform.com/libraries/oNX7JPx1.js"></script>-->
 	<script type="text/javascript" src="storyteq-connector-jw-player.js"></script>
 </head>
 <body>
@@ -12,10 +11,12 @@
 		var connector = new StoryteqConnectorJwPlayer({
 			videoPlayerId : 'jwplayer',
 			videoParameterName : 'key',
-			dataCallbackFunction: 'showDataParameters'
+			dataCallbackFunction: 'showDataParameters',
+			track: true,
+			verbose: true
 		});
 
-		function showDataParameters(){
+		function showDataParameters() {
 			window.firstName = connector.getParameterValueByName('text_firstname_01');
 			console.log(firstName);
 		}

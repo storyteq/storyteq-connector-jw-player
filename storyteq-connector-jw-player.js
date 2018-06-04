@@ -2,6 +2,15 @@ function StoryteqConnectorJwPlayer(parameters) {
     var $vm = this;
     $vm.videoPlayerId = parameters.videoPlayerId;
     $vm.videoHash = $vm.getUrlParameter(parameters.videoParameterName);
+
+    if (parameters.track) {
+        $vm.track = true;
+    }
+
+    if (parameters.verbose) {
+        $vm.verbose = true;
+    }
+
     if (parameters.dataCallbackFunction) {
         $vm.dataCallbackFunction = parameters.dataCallbackFunction;
     }
@@ -44,13 +53,17 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         image: this.posterUrl,
         events: {
             onComplete: function() {
-                console.log('Video watched for 100% (complete)');
+                if (this.verbose) {
+                    console.log('Video watched for 100% (complete)');
+                }
                 connector.videoStarted = false;
                 connector.createAnalyticView(100);
             },
             onPlay: function() {
                 if (connector.videoStarted == false) {
-                    console.log('Video watched for 0% (playstart)');
+                    if (this.verbose) {
+                        console.log('Video watched for 0% (playstart)');
+                    }
                     connector.videoStarted = true;
                     connector.createAnalyticView(0);
                 }
@@ -106,7 +119,9 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
             connector.timecodes.forEach(function(element) {
                 if (event.position > element.value && (event.position - element.value) < connector.durationOfVideo / connector.delta && element.passed == false) {
                     var percentage = connector.round(element.percentage * 100, 1);
-                    console.log('Video watched for ' + percentage + '%');
+                    if (this.verbose) {
+                        console.log('Video watched for ' + percentage + '%');
+                    }
                     connector.createAnalyticView(percentage);
                     element.passed = true;
                 }
@@ -117,15 +132,10 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
-    var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
+    var url = 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/analyticEvent.php?hash=' + this.videoHash;
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-
-    console.log(JSON.stringify({
-        'type': type,
-        'meta': meta
-    }));
 
     xhr.send(JSON.stringify({
         'type': type,
@@ -135,12 +145,10 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
+    xhr.open('GET', 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/getVideoData.php');
 
     xhr.onload = (data) => {
         var response = JSON.parse(xhr.response);
-
-        console.log(response);
 
         // Process response
         this.setVideoUrl(response.data.video_url);
@@ -196,27 +204,30 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
         meta.platform = 'mobile';
     }
 
-    console.log(meta);
+    if (this.verbose) {
+        console.log(meta);
+    }
 
     // Create analytic event
-    this.analyticPostRequest('device', meta);
+    if (this.track) {
+        this.analyticPostRequest('device', meta);
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
 
-    var meta = {    
+    var meta = {
         'percentage': percentage
     };
 
-    console.log(meta);
-
+    if (this.verbose) {
+        console.log(meta);
+    }
+    
     // Create analytic event
-    this.analyticPostRequest('view', meta);
-}
-
-StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
-    // Create analytic event
-    this.analyticPostRequest('embed', null);
+    if (this.track) {
+        this.analyticPostRequest('view', meta);
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
