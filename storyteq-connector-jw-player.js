@@ -64,8 +64,12 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     if (this.verbose) {
                         console.log('Video watched for 0% (playstart)');
                     }
+
                     connector.videoStarted = true;
-                    connector.createAnalyticView(0);
+
+                    if (this.track) {
+                        connector.createAnalyticView(0);
+                    }
                 }
             },
         }
@@ -132,7 +136,7 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
-    var url = 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/analyticEvent.php?hash=' + this.videoHash;
+    var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -145,7 +149,7 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://production.storyteq.com/storyteq/storyteq-connector-jw-player/getVideoData.php');
+    xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
 
     xhr.onload = (data) => {
         var response = JSON.parse(xhr.response);
@@ -159,7 +163,9 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
         this.setJwPlayerInstance(response);
 
         // Create device event
-        this.createAnalyticDevice();
+        if (this.track) {
+            this.createAnalyticDevice();
+        }
 
         if (this.dataCallbackFunction) {
             // Run data callback function
@@ -209,9 +215,7 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
     }
 
     // Create analytic event
-    if (this.track) {
-        this.analyticPostRequest('device', meta);
-    }
+    this.analyticPostRequest('device', meta);
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
@@ -221,13 +225,12 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
     };
 
     if (this.verbose) {
+        console.log('tracking');
         console.log(meta);
     }
     
     // Create analytic event
-    if (this.track) {
-        this.analyticPostRequest('view', meta);
-    }
+    this.analyticPostRequest('view', meta);
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
@@ -264,7 +267,7 @@ StoryteqConnectorJwPlayer.prototype.setEnvironment = function(environmentData) {
 if (typeof module === "object" && module && typeof module.exports === "object") {
     // commonjs / browserify
     module.exports = StoryteqConnectorJwPlayer;
-} else {
+} else if (typeof require != 'undefined') {
     // AMD
     define(StoryteqConnectorJwPlayer);
 }
