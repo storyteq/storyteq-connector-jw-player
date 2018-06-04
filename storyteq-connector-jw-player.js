@@ -15,6 +15,10 @@ function StoryteqConnectorJwPlayer(parameters) {
         $vm.dataCallbackFunction = parameters.dataCallbackFunction;
     }
 
+    if (parameters.defaultUrls) {
+        $vm.defaultUrls = parameters.defaultUrls;
+    }
+
     $vm.jwplayerId = 'oNX7JPx1';
     if (parameters.jwplayerId) {
         $vm.jwplayerId = parameters.jwplayerId;
@@ -149,9 +153,17 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     if (!this.videoHash || this.videoHash === undefined || this.videoHash === null) {
-        document.getElementById(this.videoPlayerId).innerHTML = 'No video hash has been given';
-        document.getElementById(this.videoPlayerId).style = 'text-align: center;background:#000;color:#fff;font-weight:900;height:200px;line-height:200px;'
-        return;
+        if (this.defaultUrls) {
+            this.setVideoUrl(this.defaultUrls.video_url);
+            this.setPosterUrl(this.defaultUrls.poster_url);
+    
+            // Instantiate JW player
+            this.setJwPlayerInstance({data:{}});
+        } else {
+            document.getElementById(this.videoPlayerId).innerHTML = 'No video hash has been given';
+            document.getElementById(this.videoPlayerId).style = 'text-align: center;background:#000;color:#fff;font-weight:900;height:200px;line-height:200px;'
+            return;
+        }
     }
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
