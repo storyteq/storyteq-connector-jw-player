@@ -56,6 +56,9 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         file: this.videoUrl,
         image: this.posterUrl,
         events: {
+            onReady: function() {
+                connector.createAnalyticEmbed();
+            },
             onComplete: function() {
                 if (this.verbose) {
                     console.log('Video watched for 100% (complete)');
@@ -248,6 +251,11 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
     
     // Create analytic event
     this.analyticPostRequest('view', meta);
+}
+
+StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
+    // Create analytic event
+    this.analyticPostRequest('embed', null);
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
