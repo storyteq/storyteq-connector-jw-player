@@ -8,7 +8,7 @@ function StoryteqConnectorJwPlayer(parameters) {
     }
 
     if (parameters.verbose) {
-        $vm.verbose = true;
+        $vm.verbose = parameters.verbose;
     }
 
     if (parameters.dataCallbackFunction) {
@@ -57,9 +57,10 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         image: this.posterUrl,
         events: {
             onReady: function() {
-                connector.createAnalyticEmbed();
+                if (this.track) {
+                    connector.createAnalyticEmbed();
+                }
             },
-
             onComplete: function() {
                 if (this.verbose) {
                     console.log('Video watched for 100% (complete)');
@@ -258,10 +259,7 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
-    if (!this.track || this.track === undefined || this.track === null) {
-        return;
-    }
-    // Create analytic event
+// Create analytic event
     this.analyticPostRequest('embed', null);
 }
 
