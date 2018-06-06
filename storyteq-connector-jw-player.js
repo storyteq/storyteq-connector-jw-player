@@ -4,11 +4,11 @@ function StoryteqConnectorJwPlayer(parameters) {
     $vm.videoHash = $vm.getUrlParameter(parameters.videoParameterName);
 
     if (parameters.track) {
-        $vm.track = true;
+        $vm.track = parameters.track;
     }
 
     if (parameters.verbose) {
-        $vm.verbose = true;
+        $vm.verbose = parameters.verbose;
     }
 
     if (parameters.dataCallbackFunction) {
@@ -56,6 +56,11 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         file: this.videoUrl,
         image: this.posterUrl,
         events: {
+            onReady: function() {
+                if (this.track) {
+                    connector.createAnalyticEmbed();
+                }
+            },
             onComplete: function() {
                 if (this.verbose) {
                     console.log('Video watched for 100% (complete)');
@@ -248,6 +253,11 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
     
     // Create analytic event
     this.analyticPostRequest('view', meta);
+}
+
+StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
+// Create analytic event
+    this.analyticPostRequest('embed', null);
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
