@@ -57,18 +57,14 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         image: connector.posterUrl,
         events: {
             onReady: function() {
-                if (connector.track) {
-                    connector.createAnalyticEmbed();
-                }
+                connector.createAnalyticEmbed();
             },
             onComplete: function() {
                 connector.videoStarted = false;
                 if (connector.verbose) {
                     console.log('Video watched for 100% (complete)');
                 }
-                if (connector.track) {
-                    connector.createAnalyticView(100);
-                }
+                connector.createAnalyticView(100);
             },
 
             onPlay: function() {
@@ -77,11 +73,9 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     if (connector.verbose) {
                         console.log('Video watched for 0% (playstart)');
                     }
-                    if (connector.track) {
-                        connector.createAnalyticView(0);
-                    }
+                    connector.createAnalyticView(0);
                 }
-            },
+            }
         }
     });
 
@@ -136,9 +130,7 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
                     if (connector.verbose) {
                         console.log('Video watched for ' + percentage + '%');
                     }
-                    if (connector.track) {
-                        connector.createAnalyticView(percentage);
-                    }
+                    connector.createAnalyticView(percentage);
                     element.passed = true;
                 }
             });
@@ -161,49 +153,50 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var connector = this;
-    if (!this.videoHash || this.videoHash === undefined || this.videoHash === null) {
-        if (this.defaultUrls) {
-            this.setVideoUrl(this.defaultUrls.video_url);
-            this.setPosterUrl(this.defaultUrls.poster_url);
+    if (!connector.videoHash || connector.videoHash === null) {
+        if (connector.defaultUrls) {
+            connector.setVideoUrl(connector.defaultUrls.video_url);
+            connector.setPosterUrl(connector.defaultUrls.poster_url);
     
             // Instantiate JW player
-            this.setJwPlayerInstance({data:{}});
+            connector.setJwPlayerInstance({data:{}});
         } else {
-            document.getElementById(this.videoPlayerId).innerHTML = 'No video hash has been given';
-            document.getElementById(this.videoPlayerId).style = 'text-align: center;background:#000;color:#fff;font-weight:900;height:200px;line-height:200px;'
-            return;
+            document.getElementById(connector.videoPlayerId).innerHTML = 'No video hash has been given';
+            document.getElementById(connector.videoPlayerId).style = 'text-align: center;background:#000;color:#fff;font-weight:900;height:200px;line-height:200px;'
         }
-    }
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash);
-
-    xhr.onload = (data) => {
-        var response = JSON.parse(xhr.response);
-
-        // Process response
-        this.setVideoUrl(response.data.video_url);
-        this.setPosterUrl(response.data.poster_url);
-        this.setParameterData(response.data.parameters);
-
-        // Instantiate JW player
-        this.setJwPlayerInstance(response);
-
-        // Create device event
-        if (connector.track) {
+    } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + connector.videoHash);
+    
+        xhr.onload = function(data) {
+            var response = JSON.parse(xhr.response);
+    
+            // Process response
+            connector.setVideoUrl(response.data.video_url);
+            connector.setPosterUrl(response.data.poster_url);
+            connector.setParameterData(response.data.parameters);
+    
+            // Instantiate JW player
+            connector.setJwPlayerInstance(response);
+            
+            // Create device event
             connector.createAnalyticDevice();
+    
+            if (connector.dataCallbackFunction) {
+                // Run data callback function
+                eval('window.' + connector.dataCallbackFunction + '()');
+            }
         }
-
-        if (connector.dataCallbackFunction) {
-            // Run data callback function
-            eval('window.' + connector.dataCallbackFunction + '()');
-        }
+    
+        xhr.send();
     }
-
-    xhr.send();
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
     var connector = this;
+    if (!connector.track || connector.track === null) {
+        return;
+    }
 
     var meta = {
         'browser': {},
@@ -246,21 +239,31 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
+    var connector = this;
+    if (!connector.track || connector.track === null) {
+        return;
+    }
+
     var meta = {
         'percentage': percentage
     };
 
-    if (this.verbose) {
+    if (connector.verbose) {
         console.log(meta);
     }
     
     // Create analytic event
-    this.analyticPostRequest('view', meta);
+    connector.analyticPostRequest('view', meta);
 }
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
+    var connector = this;
+    if (!connector.track || connector.track === null) {
+        return;
+    }
+
     // Create analytic event
-    this.analyticPostRequest('embed', null);
+    connector.analyticPostRequest('embed', null);
 }
 
 StoryteqConnectorJwPlayer.prototype.getParameterValueByName = function(parameterName) {
@@ -300,4 +303,6 @@ if (typeof module === "object" && module && typeof module.exports === "object") 
 } else if (typeof require != 'undefined') {
     // AMD
     define(StoryteqConnectorJwPlayer);
+} else {
+    window.StoryteqConnectorJwPlayer = StoryteqConnectorJwPlayer;
 }

@@ -1,6 +1,6 @@
 {
   "name": "storyteq-connector-jw-player",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A JWPlayer connector for the StoryTEQ API to simplify video loading, parameter values and video analytics.",
   "main": "storyteq-connector-jw-player.min.js",
   "scripts": {
