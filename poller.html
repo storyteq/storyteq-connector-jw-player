@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Poller demo</title>
+	<script type="text/javascript" src="https://content.jwplatform.com/libraries/oNX7JPx1.js"></script>
+	<script type="text/javascript" src="storyteq-connector-jw-player.js"></script>
+</head>
+<body>
+	<div id="jwplayer">Polling...</div>
+    <script type="text/javascript">
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        function pollVideo(hash, retries, timeout) {
+            if (retries) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + hash);
+                xhr.onload = function(data) {
+                    var response = JSON.parse(xhr.response);
+                    var status = response.data.current_state;
+                    if (status !== 'finished') {
+                        console.log(status);
+                        setTimeout(function() {
+                            pollVideo(hash, retries - 1, timeout);
+                        }, timeout);
+                    } else {
+                        var connector = new StoryteqConnectorJwPlayer({
+                            videoPlayerId : 'jwplayer',
+                            videoHash : hash,
+                            verbose: true
+                        });
+                    }
+                }
+            
+                xhr.send();
+            }
+        }
+
+        var hash = getUrlParameter('hash');
+        pollVideo(hash, 99, 5000);
+	</script>
+</body>
+</html>
