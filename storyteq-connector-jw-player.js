@@ -1,7 +1,17 @@
 function StoryteqConnectorJwPlayer(parameters) {
     var connector = this;
+    if (!parameters.videoPlayerId) {
+        throw new Error('Missing videoPlayerID.');
+    }
     connector.videoPlayerId = parameters.videoPlayerId;
-    connector.videoHash = connector.getUrlParameter(parameters.videoParameterName);
+
+    if (parameters.videohash) {
+        connector.videoHash = parameters.videohash;
+    } else if (parameters.videoParameterName) {
+        connector.videoHash = connector.getUrlParameter(parameters.videoParameterName);
+    } else {
+        throw new Error('Missing videoParameterName or videohash.');
+    }
 
     if (parameters.track) {
         connector.track = parameters.track;
