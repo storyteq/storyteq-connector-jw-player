@@ -151,6 +151,9 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
     var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
+    if (!connector.track || connector.track === null) {
+        url = 'https://api.storyteq.com/api/v3/open/template/' + this.templateHash;
+    }
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -204,9 +207,6 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
     var connector = this;
-    if (!connector.track || connector.track === null) {
-        return;
-    }
 
     var meta = {
         'browser': {},
@@ -250,9 +250,6 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticDevice = function() {
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
     var connector = this;
-    if (!connector.track || connector.track === null) {
-        return;
-    }
 
     var meta = {
         'percentage': percentage
@@ -268,9 +265,6 @@ StoryteqConnectorJwPlayer.prototype.createAnalyticView = function(percentage) {
 
 StoryteqConnectorJwPlayer.prototype.createAnalyticEmbed = function() {
     var connector = this;
-    if (!connector.track || connector.track === null) {
-        return;
-    }
 
     // Create analytic event
     connector.analyticPostRequest('embed', null);
