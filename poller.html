@@ -8,12 +8,6 @@
 <body>
 	<div id="jwplayer">Polling...</div>
     <script type="text/javascript">
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
 
         function pollVideo(hash, retries, timeout) {
             if (retries) {
@@ -40,7 +34,7 @@
             }
         }
 
-        var hash = getUrlParameter('hash');
+        var hash = '21cd7a843c3a6923f6973f4c9f548592';
         pollVideo(hash, 99, 5000);
 	</script>
 </body>
