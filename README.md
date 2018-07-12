@@ -23,8 +23,7 @@ After loading the script into your page, the connector needs to be configured. T
 ```
 var connector = new StoryteqConnectorJwPlayer({
 	videoPlayerId : 'jwplayer',
-	videoParameterName : 'key',
-	track: true,
+	videoParameterName : 'key'
 });
 ``` 
 Not all parameters are required. Please check out the table below and  ```example.html``` in this repository for an example of a fully specced connector.
@@ -34,7 +33,7 @@ Not all parameters are required. Please check out the table below and  ```exampl
 |videoPlayerId|string|The id of the HTML-element where the video player should be loaded.|yes|
 |videoHash|string|The hash used to directly retrieve the video and send analytics events to.|not required if videoParameterName is filled|
 |videoParameterName|string|The URL parameter where the hash is obtained from.|not required if videoFash is filled|
-|track|bool|Enable or disable tracking of video analytics.|yes|
+|mediaid|string|JWPlayer mediaid, used for JWPlayer tracking.|no|
 |dataCallbackFunction|string|The name of the function which is called after video data has been loaded from the StoryTEQ API. This video data can for example be used for greeting the visitor with a personal message or prefilling a form. Video data parameter keys are similar to your template parameter keys.|no|
 |verbose|bool|Enable console logging for the connector.|no|
 |defaultUrls|object|Define fallback URL's for when no hash is provided in the URL.|false|
