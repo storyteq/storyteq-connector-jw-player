@@ -13,8 +13,10 @@ function StoryteqConnectorJwPlayer(parameters) {
         throw new Error('Missing videoParameterName or videoHash.');
     }
 
-    if (parameters.track) {
-        connector.track = parameters.track;
+    if (parameters.mediaid) {
+        connector.mediaid = parameters.mediaid;
+    } else {
+        connector.mediaid = 'WYwyv8s9';
     }
 
     if (parameters.verbose) {
@@ -65,6 +67,7 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
     jwPlayerInstance.setup({
         file: connector.videoUrl,
         image: connector.posterUrl,
+        mediaid: connector.mediaid,
         events: {
             onReady: function() {
                 connector.createAnalyticEmbed();
@@ -151,9 +154,6 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
     var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
-    if (!connector.track || connector.track === null) {
-        url = 'https://api.storyteq.com/api/v3/open/template/' + this.templateHash;
-    }
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
