@@ -4,18 +4,22 @@ A JWPlayer connector for the StoryTEQ API to simplify the loading of video data 
 The analytics are visible in the StoryTEQ dashboard which is currently in beta. Please [contact us](mailto:teq@storyteq.com) if you haven't received a login yet.
 
 ## Dependencies
-Loading the connector into your page is fairly easy, you can download the connector as an npm package using the following command:
+Loading the connector into your page is fairly easy, you can include the script directly from our CDN. Make sure to include the  script in the head of your page like this:
+```
+<script  type="text/javascript"  src="https://storage.googleapis.com/storyteq/platform/connector/storyteq-connector-jw-player.min.js"></script>
+```
+Otherwise you can install the connector as an npm package using the following command:
 ```
 npm install storyteq-connector-jw-player
 ```
-Or manually import the connector by downloading this repository. Make sure to include the  script (or the minified version) in the head of your page like this:
+Or manually import the connector by downloading this repository.
 ```
 <script  type="text/javascript"  src="storyteq-connector-jw-player.js"></script>
 ```
 Altough JW player is included in the connector, it's possible to use your own JW player license (version 8). In that case please include the StoryTEQ connector after loading your own JW player.
 ```
 <script type="text/javascript" src="https://content.jwplatform.com/libraries/aBC1DEf2.js"></script>
-<script type="text/javascript" src="storyteq-connector-jw-player.js"></script>
+<script type="text/javascript" src="https://storage.googleapis.com/storyteq/platform/connector/storyteq-connector-jw-player.min.js"></script>
 ```
 ## Usage
 After loading the script into your page, the connector needs to be configured. This is done by defining values for a few parameters in the following fashion:
