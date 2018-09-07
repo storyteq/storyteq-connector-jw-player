@@ -41,6 +41,7 @@ function StoryteqConnectorJwPlayer(parameters) {
     connector.durationOfVideo = null;
     connector.timecodes = [];
     connector.videoStarted = false;
+    connector.firstPlay = true;
 
     (function() {
         var script = document.createElement('script');
@@ -86,7 +87,11 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     if (connector.verbose) {
                         console.log('Video watched for 0% (playstart)');
                     }
-                    connector.createAnalyticView(0);
+                    if (connector.firstPlay){
+                        connector.createAnalyticView(0);
+                        connetor.firstPlay = false;
+                    }
+                    
                 }
             }
         }
