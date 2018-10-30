@@ -89,7 +89,7 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     }
                     if (connector.firstPlay){
                         connector.createAnalyticView(0);
-                        connetor.firstPlay = false;
+                        connector.firstPlay = false;
                     }
                     
                 }
@@ -158,7 +158,7 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
     var xhr = new XMLHttpRequest();
-    var url = 'https://api.storyteq.com/api/v3/open/video/' + this.videoHash;
+    var url = 'https://api.storyteq.com/v4/open/media/' + this.videoHash;
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -184,14 +184,14 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
         }
     } else {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + connector.videoHash);
+        xhr.open('GET', 'https://api.storyteq.com/v4/open/media/' + connector.videoHash);
     
         xhr.onload = function(data) {
             var response = JSON.parse(xhr.response);
     
             // Process response
-            connector.setVideoUrl(response.data.video_url);
-            connector.setPosterUrl(response.data.poster_url);
+            connector.setVideoUrl(response.data.urls.video);
+            connector.setPosterUrl(response.data.urls);
             connector.setParameterData(response.data.parameters);
     
             // Instantiate JW player
@@ -294,8 +294,12 @@ StoryteqConnectorJwPlayer.prototype.setVideoUrl = function(videoUrl) {
     this.videoUrl = videoUrl;
 }
 
-StoryteqConnectorJwPlayer.prototype.setPosterUrl = function(posterUrl) {
-    this.posterUrl = posterUrl;
+StoryteqConnectorJwPlayer.prototype.setPosterUrl = function(urls) {
+    if (urls.hasOwnProperty('gif')){
+         this.posterUrl = urls.gif;
+    } else if (urls.hasOwnProperty('image')){
+         this.posterUrl = urls.image;
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.setParameterData = function(parameterData) {
