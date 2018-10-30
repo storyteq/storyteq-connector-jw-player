@@ -157,21 +157,28 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 }
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
-    var xhr = new XMLHttpRequest();
-    var url = 'https://api.storyteq.com/v4/open/media/' + this.videoHash;
+    if (this.videoHash != null && this.videoHash != '') {
+        var xhr = new XMLHttpRequest();
+        var url = 'https://api.storyteq.com/v4/open/media/' + this.videoHash;
 
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.open('POST', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.send(JSON.stringify({
-        'type': type,
-        'meta': meta
-    }));
+        xhr.send(JSON.stringify({
+            'type': type,
+            'meta': meta
+        }));
+    } else {
+        if (connector.verbose) {
+            console.log('No analytics will be created since no unique hash has been provided.');
+        }
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var connector = this;
     if (!connector.videoHash || connector.videoHash === null) {
+
         if (connector.defaultUrls) {
             connector.setVideoUrl(connector.defaultUrls.video_url);
             connector.setPosterUrl(connector.defaultUrls.poster_url);

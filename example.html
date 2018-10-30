@@ -3,7 +3,7 @@
 <head>
 	<title>JW Player demo</title>
 	<script type="text/javascript" src="https://content.jwplatform.com/libraries/oNX7JPx1.js"></script>
-	<script type="text/javascript" src="storyteq-connector-jw-player.js"></script>
+	<script type="text/javascript" src="https://storage.googleapis.com/storyteq/platform/connector/storyteq-connector-jw-player.min.js"></script>
 </head>
 <body>
 	<div id="jwplayer">Loading the player...</div>
@@ -11,19 +11,19 @@
 
 		var connector = new StoryteqConnectorJwPlayer({
 			videoPlayerId : 'jwplayer',
-			// videohash : '21cd7a843c3a6923f6973f4c9f548592',
+			videohash : '544208b722061e75fea340ba08210ba8',
 			videoParameterName : 'key',
-			// dataCallbackFunction: 'showDataParameters',
+			dataCallbackFunction: 'showDataParameters',
 			mediaid: 'WYwyv8s9',
 			verbose: true,
-			// defaultUrls: {
-			// 	video_url: 'https://storage.googleapis.com/storyteq/production/09_17/Sales_Ab/1497033_c7qwy1IGr1BX/render.mp4',
-			// 	poster_url: 'https://storage.googleapis.com/storyteq/production/09_17/Sales_Ab/1497033_c7qwy1IGr1BX/render.jpg'
-			// }
+			defaultUrls: {
+				video_url: 'https://storage.googleapis.com/storyteq/production/09_17/Sales_Ab/1497033_c7qwy1IGr1BX/render.mp4',
+				poster_url: 'https://storage.googleapis.com/storyteq/production/09_17/Sales_Ab/1497033_c7qwy1IGr1BX/render.jpg'
+			}
 		});
 
 		function showDataParameters() {
-			window.firstName = connector.getParameterValueByName('text_firstname_01');
+			window.firstName = connector.getParameterValueByName('text_voornaam');
 			console.log(firstName);
 		}
 
