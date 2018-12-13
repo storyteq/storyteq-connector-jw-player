@@ -328,6 +328,14 @@ StoryteqConnectorJwPlayer.prototype.setPosterUrl = function(urls) {
     }
 }
 
+StoryteqConnectorJwPlayer.prototype.getVideoUrl = function() {
+    return this.videoUrl;
+}
+
+StoryteqConnectorJwPlayer.prototype.getPosterUrl = function() {
+    return this.posterUrl;
+}
+
 StoryteqConnectorJwPlayer.prototype.setParameterData = function(parameterData) {
     this.parameterData = parameterData;
 }
