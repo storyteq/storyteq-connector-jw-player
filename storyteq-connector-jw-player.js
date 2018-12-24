@@ -4,6 +4,7 @@ function StoryteqConnectorJwPlayer(parameters) {
         throw new Error('Missing videoPlayerID.');
     }
     connector.videoPlayerId = parameters.videoPlayerId;
+    connector.tracking = true;
 
     if (parameters.videoHash) {
         connector.videoHash = parameters.videoHash;
@@ -21,6 +22,10 @@ function StoryteqConnectorJwPlayer(parameters) {
 
     if (parameters.verbose) {
         connector.verbose = parameters.verbose;
+    }
+
+    if (parameters.tracking == false) {
+        connector.tracking = parameters.tracking;
     }
 
     if (parameters.dataCallbackFunction) {
@@ -176,7 +181,7 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 }
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
-    if (this.videoHash != null && this.videoHash != '') {
+    if (this.videoHash != null && this.videoHash != '' && this.tracking != false) {
         var xhr = new XMLHttpRequest();
         var url = 'https://api.storyteq.com/v4/open/media/' + this.videoHash;
 
@@ -189,7 +194,7 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
         }));
     } else {
         if (connector.verbose) {
-            console.log('No analytics will be created since no unique hash has been provided.');
+            console.log('No analytics will be created since no unique hash has been provided or tracking has been disabled.');
         }
     }
 }
