@@ -45,6 +45,10 @@ function StoryteqConnectorJwPlayer(parameters) {
         connector.subs = parameters.subs;
     }
 
+    if (parameters.playerSetup) {
+        connector.playerSetup = parameters.playerSetup;
+    }
+
     // Video event variables
     connector.delta = 20;
     connector.durationOfVideo = null;
@@ -105,6 +109,12 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
             }
         }
     };
+
+    if (connector.playerSetup) {
+        for(var key in connector.playerSetup){
+            config[key] = connector.playerSetup[key];
+        }
+    }
     
     if (connector.subs) {
         config.captions = {
