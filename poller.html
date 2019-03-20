@@ -12,10 +12,10 @@
         function pollVideo(hash, retries, timeout) {
             if (retries) {
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://api.storyteq.com/api/v3/open/video/' + hash);
+                xhr.open('GET', 'https://api.storyteq.com/v4/open/media/' + hash);
                 xhr.onload = function(data) {
                     var response = JSON.parse(xhr.response);
-                    var status = response.data.current_state;
+                    var status = response.data.current_status;
                     if (status !== 'finished') {
                         console.log(status);
                         setTimeout(function() {
@@ -34,7 +34,7 @@
             }
         }
 
-        var hash = '21cd7a843c3a6923f6973f4c9f548592';
+        var hash = '4bb13554353628d05b4572883b4b462e';
         pollVideo(hash, 99, 5000);
 	</script>
 </body>
