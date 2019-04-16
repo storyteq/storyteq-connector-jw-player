@@ -6,12 +6,14 @@ function StoryteqConnectorJwPlayer(parameters) {
     connector.videoPlayerId = parameters.videoPlayerId;
     connector.tracking = true;
 
-    if (parameters.videoHash) {
+    if (parameters.mediaData) {
+        connector.mediaData = parameters.mediaData;
+    } else if (parameters.videoHash) {
         connector.videoHash = parameters.videoHash;
     } else if (parameters.videoParameterName) {
         connector.videoHash = connector.getUrlParameter(parameters.videoParameterName);
     } else {
-        throw new Error('Missing videoParameterName or videoHash.');
+        throw new Error('Missing videoParameterName or videoHash or mediaData.');
     }
 
     if (parameters.mediaid) {
@@ -213,7 +215,20 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     var connector = this;
     if (!connector.videoHash || connector.videoHash === null) {
 
-        if (connector.defaultUrls) {
+        if (connector.mediaData) {
+            if (connector.mediaData.urls) {
+                connector.setVideoUrl(connector.mediaData.urls.video);
+                if (connector.mediaData.urls.gif) {
+                    connector.setPosterUrl(connector.mediaData.urls.gif);
+                } else if (connector.mediaData.urls.image) {
+                    connector.setPosterUrl(connector.mediaData.urls.image);
+                }
+            } else {
+                connector.setVideoUrl(connector.mediaData.video_url);
+                connector.setPosterUrl(connector.mediaData.poster_url);
+            }
+            connector.setJwPlayerInstance({data:connector.mediaData});
+        } else if (connector.defaultUrls) {
             connector.setVideoUrl(connector.defaultUrls.video_url);
             connector.setPosterUrl(connector.defaultUrls.poster_url);
     
