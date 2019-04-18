@@ -51,6 +51,10 @@ function StoryteqConnectorJwPlayer(parameters) {
         connector.playerSetup = parameters.playerSetup;
     }
 
+    if (parameters.events) {
+        connector.events = parameters.events;
+    }
+
     // Video event variables
     connector.delta = 20;
     connector.durationOfVideo = null;
@@ -80,6 +84,9 @@ function StoryteqConnectorJwPlayer(parameters) {
 StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
     var connector = this;
     var jwPlayerInstance = jwplayer(connector.videoPlayerId);
+
+    console.log(connector.events);
+
     var config = {
         file: connector.videoUrl,
         image: connector.posterUrl,
@@ -87,6 +94,10 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
         events: {
             onReady: function() {
                 connector.createAnalyticEmbed();
+                
+                if (connector.events && connector.events.onReady) {
+                    connector.events.onReady();
+                }
             },
             onComplete: function() {
                 connector.videoStarted = false;
@@ -94,6 +105,10 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     console.log('Video watched for 100% (complete)');
                 }
                 connector.createAnalyticView(100);
+                
+                if (connector.events && connector.events.onComplete) {
+                    connector.events.onComplete();
+                }
             },
 
             onPlay: function() {
@@ -105,8 +120,11 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                     if (connector.firstPlay){
                         connector.createAnalyticView(0);
                         connector.firstPlay = false;
-                    }
-                    
+                    }                    
+                }
+                
+                if (connector.events && connector.events.onPlay) {
+                    connector.events.onPlay();
                 }
             }
         }
