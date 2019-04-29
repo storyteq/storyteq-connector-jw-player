@@ -36,8 +36,9 @@ Not all parameters are required. Please check out the table below and  ```exampl
 |parameter|type|description|required|
 |--|--|--|--|
 |videoPlayerId|string|The id of the HTML-element where the video player should be loaded.|yes|
-|videoHash|string|The hash used to directly retrieve the video and send analytics events to.|not required if videoParameterName is filled|
-|videoParameterName|string|The URL parameter where the hash is obtained from.|not required if videoHash is filled|
+|videoHash|string|The hash used to directly retrieve the video and send analytics events to.|not required if videoParameterName or mediaData is filled|
+|videoParameterName|string|The URL parameter where the hash is obtained from.|not required if videoHash or mediaData is filled|
+|mediaData|json|The full media data if already previously obtained from the API.|not required if videoHash or videoParameterName is filled|
 |mediaid|string|JWPlayer mediaid, used for JWPlayer tracking.|no|
 |dataCallbackFunction|string|The name of the function which is called after video data has been loaded from the StoryTEQ API. This video data can for example be used for greeting the visitor with a personal message or prefilling a form. Video data parameter keys are similar to your template parameter keys.|no|
 |verbose|bool|Enable console logging for the connector.|no|

@@ -85,8 +85,6 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
     var connector = this;
     var jwPlayerInstance = jwplayer(connector.videoPlayerId);
 
-    console.log(connector.events);
-
     var config = {
         file: connector.videoUrl,
         image: connector.posterUrl,
@@ -125,6 +123,12 @@ StoryteqConnectorJwPlayer.prototype.setJwPlayerInstance = function(response) {
                 
                 if (connector.events && connector.events.onPlay) {
                     connector.events.onPlay();
+                }
+            },
+            
+            onPause: function() {
+                if (connector.events && connector.events.onPause) {
+                    connector.events.onPause();
                 }
             }
         }
@@ -211,9 +215,13 @@ StoryteqConnectorJwPlayer.prototype.videoEventEmitter = function(jwPlayerInstanc
 }
 
 StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
-    if (this.videoHash != null && this.videoHash != '' && this.tracking != false) {
+    if ((this.mediaData != null || (this.videoHash != null && this.videoHash != '')) && this.tracking != false) {
+        var hash = this.videoHash;
+        if (this.mediaData != null) {
+            hash = mediaData.hash;
+        }
         var xhr = new XMLHttpRequest();
-        var url = 'https://api.storyteq.com/v4/open/media/' + this.videoHash;
+        var url = 'https://api.storyteq.com/v4/open/media/' + hash;
 
         xhr.open('POST', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
