@@ -254,6 +254,9 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
                 connector.setPosterUrl(connector.mediaData.poster_url);
             }
             connector.setJwPlayerInstance({data:connector.mediaData});
+
+            // Create device event
+            connector.createAnalyticDevice();
         } else if (connector.defaultUrls) {
             connector.setVideoUrl(connector.defaultUrls.video_url);
             connector.setPosterUrl(connector.defaultUrls.poster_url);
