@@ -2,23 +2,23 @@
 <html>
 <head>
 	<title>JW Player demo</title>
-	<script type="text/javascript" src="https://content.jwplatform.com/libraries/oNX7JPx1.js"></script>
+	<!-- <script type="text/javascript" src="https://content.jwplatform.com/libraries/oNX7JPx1.js"></script> -->
 	<script type="text/javascript" src="https://storage.googleapis.com/storyteq/platform/connector/storyteq-connector-jw-player.min.js"></script>
 </head>
 <body>
-	<div id="jwplayer">Loading the player...</div>
+	<div id="player">Loading the player...</div>
 	<script type="text/javascript">
 
 		var connector = new StoryteqConnectorJwPlayer({
-			videoPlayerId : 'jwplayer',
-			videohash : '544208b722061e75fea340ba08210ba8',
+			videoPlayerId : 'player',
+			videohash : '9e0627ae3c707b451c9ac8e1408563a1',
 			videoParameterName : 'key',
 			dataCallbackFunction: 'showDataParameters',
 			mediaid: 'WYwyv8s9',
 			verbose: true,
 			defaultUrls: {
-				video_url: 'https://storage.googleapis.com/storyteq/generic/knab/eindejaarsgroet/render.mp4',
-				poster_url: 'https://storage.googleapis.com/storyteq/generic/knab/eindejaarsgroet/render.png'
+				video_url: 'https://storage.googleapis.com/storyteq/production/04_19/Storyteq_Dummy/9e0627ae3c707b451c9ac8e1408563a1/render.mp4',
+				poster_url: 'https://storage.googleapis.com/storyteq/production/04_19/Storyteq_Dummy/9e0627ae3c707b451c9ac8e1408563a1/render.jpg'
 			},
 			subs: {
 				path: 'subs.srt',
@@ -30,7 +30,7 @@
 		});
 
 		function showDataParameters() {
-			window.firstName = connector.getParameterValueByName('text_voornaam');
+			window.firstName = connector.getParameterValueByName('text_firstname');
 			console.log(firstName);
 		}
 
