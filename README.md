@@ -47,7 +47,7 @@ Not all parameters are required. Please check out the table below and  ```exampl
 ## Testing
 If everything is set up correctly, you can test the connector. To create a valid URL, attach the videoParameterName as a GET parameter to your base URL, then add the video's unique hash as a value. For example:
 ```
-https://domain.com?key=544208b722061e75fea340ba08210ba8
+https://domain.com?key=9e0627ae3c707b451c9ac8e1408563a1
 ```
 When you visit your page, the generated video should automatically be loaded.
 ## Support
