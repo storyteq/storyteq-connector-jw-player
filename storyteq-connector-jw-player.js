@@ -224,7 +224,9 @@ StoryteqConnectorJwPlayer.prototype.analyticPostRequest = function(type, meta) {
         var url = 'https://api.storyteq.com/v4/open/media/' + hash;
 
         xhr.open('POST', url);
+        xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-Content-Type-Options', 'nosniff');
 
         xhr.send(JSON.stringify({
             'type': type,
@@ -270,6 +272,9 @@ StoryteqConnectorJwPlayer.prototype.getVideoData = function() {
     } else {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://api.storyteq.com/v4/open/media/' + connector.videoHash);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-Content-Type-Options', 'nosniff');
     
         xhr.onload = function(data) {
             var response = JSON.parse(xhr.response);
