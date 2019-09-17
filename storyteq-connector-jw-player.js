@@ -55,6 +55,10 @@ function StoryteqConnectorJwPlayer(parameters) {
         connector.events = parameters.events;
     }
 
+    if (parameters.posterUrl) {
+        connector.posterUrl = parameters.posterUrl;
+    }
+
     // Video event variables
     connector.delta = 20;
     connector.durationOfVideo = null;
@@ -381,14 +385,18 @@ StoryteqConnectorJwPlayer.prototype.getUrlParameter = function(name) {
 };
 
 StoryteqConnectorJwPlayer.prototype.setVideoUrl = function(videoUrl) {
-    this.videoUrl = videoUrl;
+    if (!connector.videoUrl || connector.videoUrl === '') {
+        this.videoUrl = videoUrl;
+    }
 }
 
 StoryteqConnectorJwPlayer.prototype.setPosterUrl = function(urls) {
-    if (urls.hasOwnProperty('gif')){
-         this.posterUrl = urls.gif;
-    } else if (urls.hasOwnProperty('image')){
-         this.posterUrl = urls.image;
+    if (!connector.posterUrl || connector.posterUrl === '') {
+        if (urls.hasOwnProperty('gif')){
+             this.posterUrl = urls.gif;
+        } else if (urls.hasOwnProperty('image')){
+             this.posterUrl = urls.image;
+        }
     }
 }
 

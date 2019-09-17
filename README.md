@@ -44,6 +44,7 @@ Not all parameters are required. Please check out the table below and  ```exampl
 |verbose|bool|Enable console logging for the connector.|no|
 |defaultUrls|object|Define fallback URL's for when no hash is provided in the URL.|no|
 |playerSetup|object|Define other player properties according to https://developer.jwplayer.com/jw-player/docs/developer-guide/customization/configuration-reference/|no|
+|posterUrl|string|Define a poster url to override the personalised poster|no|
 ## Testing
 If everything is set up correctly, you can test the connector. To create a valid URL, attach the videoParameterName as a GET parameter to your base URL, then add the video's unique hash as a value. For example:
 ```
