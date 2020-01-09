@@ -17,7 +17,7 @@ Or manually import the connector by downloading this repository.
 ```
 <script  type="text/javascript"  src="storyteq-connector-jw-player.js"></script>
 ```
-Altough JW player is included in the connector, it's possible to use your own JW player license (version 8). In that case please include the StoryTEQ connector after loading your own JW player.
+Altough JW player is included in the connector for development purposes, it's advised to use your own JW player license (version 8). Include the StoryTEQ connector after loading your own JW player.
 ```
 <script type="text/javascript" src="https://content.jwplatform.com/libraries/aBC1DEf2.js"></script>
 <script type="text/javascript" src="https://storage.googleapis.com/storyteq/platform/connector/storyteq-connector-jw-player.min.js"></script>
